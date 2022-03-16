@@ -1,6 +1,3 @@
 #过滤依赖包中的所有文件
-/vendor
-log
-log/*
 .idea
 .idea/*
