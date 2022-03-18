@@ -143,6 +143,11 @@ func (wsOp *WebSocketOp) readLoop(conn *websocket.Conn) {
 	for conn != nil {
 		msgType, buf, err := conn.ReadMessage()
 		if err != nil {
+			closeErr := conn.Close()
+			if closeErr != nil {
+				log.Error("conn Close error: %s", err)
+				continue
+			}
 			log.Error("Read error: %s", err)
 			continue
 		}
@@ -328,7 +333,7 @@ func (wsOp *WebSocketOp) handleSubCallbackFun(ch string, data string, jdata map[
 
 func (wsOp *WebSocketOp) handleReqCallbackFun(ch string, data string, jdata map[string]interface{}) {
 	var mi *MethonInfo = nil
-	var found bool = false
+	var found = false
 	ch = strings.ToLower(ch)
 
 	if mi, found = wsOp.onReqCallbackFuns[ch]; !found {
